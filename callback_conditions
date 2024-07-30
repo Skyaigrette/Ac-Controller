@@ -1,0 +1,114 @@
+bool autoMode = true;
+
+bool validateTemperature(String number) {
+  for (byte i = 0; i < number.length() ; i++) {
+    if (!isDigit(number.charAt(i))) {
+      Serial.println("Value is not an Integer.");
+      return false;
+    }
+    int temp = number.toInt();
+    if ( temp < 16 && temp > 31) {
+      Serial.println("Valuse is not valid.");
+      return false;
+    }
+    return true;
+  }
+}
+
+bool handleAutoMode(String message) {
+  Serial.println("1");
+  if ( message.equalsIgnoreCase("ON") ) {
+    autoMode = true;
+    Serial.println("Auto Mod ON");
+  } else if ( message.equalsIgnoreCase("OFF") ) {
+    autoMode = false;
+    Serial.println("Auto Mod OFF");
+  } else {
+    Serial.println("Message received but irrelevant.");
+    return false;
+  }
+  Serial.println("2");
+  return true;
+
+}
+
+bool handleTemperature(String message) {
+  if (!validateTemperature(message)) {
+    return false;
+  }
+  ac.setTemp(message.toInt());
+  Serial.print("AC Temp Set to = "); Serial.println(message);
+  return true;
+}
+
+bool handleMode(String message) {
+  if (message.equalsIgnoreCase("cool")) {
+    ac.setMode(kMitsubishi112Cool); // cool - heat - auto - dry
+  }
+  else if (message.equalsIgnoreCase("heat")) {
+    ac.setMode(kMitsubishi112Heat);
+  }
+  else if (message.equalsIgnoreCase("auto")) {
+    ac.setMode(kMitsubishi112Auto);
+  }
+  else if (message.equalsIgnoreCase("dry")) {
+    ac.setMode(kMitsubishi112Dry);
+  } else {
+    Serial.println("None valid mode given.");
+    return false;
+  }
+  return true;
+}
+
+bool handleSwingV(String message) {
+  if (message.equalsIgnoreCase("lowest")) {
+    ac.setSwingV(kMitsubishi112SwingVLowest); // lowest - low - middle - high - highest - auto
+
+  } else if (message.equalsIgnoreCase("low")) {
+    ac.setSwingV(kMitsubishi112SwingVLow);
+  } else if (message.equalsIgnoreCase("mid") || message.equalsIgnoreCase("middle")) {
+    ac.setSwingV(kMitsubishi112SwingVMiddle);
+  } else if (message.equalsIgnoreCase("high")) {
+    ac.setSwingV(kMitsubishi112SwingVHigh);
+  } else if (message.equalsIgnoreCase("highest")) {
+    ac.setSwingV(kMitsubishi112SwingVHighest);
+  } else if (message.equalsIgnoreCase("auto")) {
+    ac.setSwingV(kMitsubishi112SwingVAuto);
+  } else {
+    Serial.println("none valid info");
+    return false;
+  }
+  return true;
+}
+
+bool handlePower(String message) {
+  autoMode = false;
+  if (message.equalsIgnoreCase("on")) {
+    powerOn(false);
+  } else if ( message.equalsIgnoreCase("off")) {
+    powerOff(false);
+  } else {
+    Serial.println("X");
+    autoMode = true;
+    return false;
+  }
+  return true;
+}
+
+// min - low - med - max
+bool handleFan(String message) {
+  if(message.equalsIgnoreCase("min") || message.equalsIgnoreCase("minimum")){
+    ac.setFan(kMitsubishi112FanMin);
+  } else if( message.equalsIgnoreCase("low") ){
+    ac.setFan(kMitsubishi112FanLow);
+  } else if( message.equalsIgnoreCase("med") || message.equalsIgnoreCase("medium") ){
+    ac.setFan(kMitsubishi112FanMed);
+  } else if (message.equalsIgnoreCase("max") || message.equalsIgnoreCase("maximum") ){
+    ac.setFan(kMitsubishi112FanMax);
+  } else{
+    Serial.println("None valid value given for FAN");
+    return false;
+  }
+  return true;
+  
+}
