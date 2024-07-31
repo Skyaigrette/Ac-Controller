@@ -19,4 +19,6 @@ If self mode is on, you can open and close your AC using your phone, regardless 
 
 You can easily set your AC's swing, mode, fan speed, and temperature using MQTT. You can find each topic by checking the code and adapt it as needed. (Came with version 2)
 
+And I tried to split code as much as possible so I hope the code doesn't seem chaotic.
+
 THIS IS NOT A COMPLETE PROJECT. I am sharing it so I won't lose my code in the future, and someone might get inspired by it.
